@@ -1,2 +1,2 @@
-# editor
-Edit movies and spot tags.
+# webapp
+The telll web app
