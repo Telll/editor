@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+
+<head>
+    <title>telll version 0.17.0</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+    <!-- see http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximmum-scale=1, initial-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<style>
+	html {
+		    height: calc(100% + 72px);
+	    }
+        /* following two viewport lines are equivalent to meta viewport statement above, needed for Windows */
+        /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ 
+        
+        @-ms-viewport {
+            width: 100vw;
+            min-zoom: 100%;
+            zoom: 100%;
+        }
+        
+        @viewport {
+            width: 100vw;
+            min-zoom: 100% zoom: 100%;
+        }
+        
+        @-ms-viewport {
+            user-zoom: fixed;
+            min-zoom: 100%;
+        }
+        
+        @viewport {
+            user-zoom: fixed;
+            min-zoom: 100%;
+        }*/
+    </style>
+
+<!-- iPad, iPhone icons -->
+<link rel="apple-touch-icon" href="img/touch-icon-57.png">
+<link rel="apple-touch-icon" sizes="76x76" href="img/touch-icon-76.png">
+<link rel="apple-touch-icon" sizes="120x120" href="img/touch-icon-120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="img/touch-icon-152.png">
+
+<link href="img/apple-touch-startup-image-320x460.png" rel="apple-touch-startup-image">
+
+
+    <!-- Projekktor -->
+    <link rel='stylesheet' id='telll-projekktor-css' href='js/projekktor/themes/maccaco/projekktor.style.css' type='text/css' media='all' />
+    <link rel="stylesheet" type="text/css" href="css/main.css" class="main-css">
+    <!-- Uncomment the following scripts if you convert your "Standard HTML5" project into a "Cordova" project. -->
+    <!-- <script src="cordova.js"></script> -->
+    <!-- phantom library, needed for Cordova api calls, added during build -->
+
+    <!--    <script src="xdk/init-dev.js"></script>-->
+    <!-- normalizes device and document ready events, see README for details -->
+    <script src="js/telllSDK.js"></script>
+    <script type="application/javascript">
+        // for compatibility
+        jQuery = $;
+    </script>
+    <script src="js/projekktor/projekktor-1.3.09.js"></script>
+
+    <script src="js/app.js"></script>
+    <!--    <script src="http://debug-software.intel.com/target/target-script-min.js#3i5ZEoHcd7YLg7RsvCmKt6aXYPxetH7oygW3OlewU9k"></script>-->
+</head>
+
+<body>
+
+    <div id="telll-stage">
+        <div id="telll-content">
+            <div id="menu">
+<span style="font-size:26px" class="telll"><span style="color:white">te</span><span class="red">l</span><span class="green">l</span><span class="blue">l</span></span>
+                <br>
+                <br>
+                <button class="telll-button" id="open-movies-list">movies</button>
+                <br>
+                <button class="telll-button" id="open-clickbox">clickbox</button>
+                <br>
+                <button class="telll-button" id="open-dashboard">dashboard</button>
+                <br>
+                <button class="telll-button" id="do-logout">logout</button>
+            </div>
+            <div id="player"></div>
+            <script type="text/javascript" id="button-behaviors">
+                // button behaviors
+                $("#open-dashboard").on("click", function (e) {
+			    if (!isIphone){
+                    myAdFw.showDashboard();
+                    setTimeout(function () {
+                        telllPopup($(".telll-dashboard-widget"), "Dashboard");
+                    }, 100);
+                    $("#clicks-dashboard").html("");
+                    $("#clicks-dashboard").append("<iframe src='https://docs.google.com/spreadsheets/d/17RcrvLGTuS9or5UMWfeLPncYsTO5QkhSLvJX114hOAU/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false'></iframe>");
+                    $("#clicks-dashboard").css({width:'100%',"min-width":"initial"});
+		    $("#clicks-dashboard iframe").css({width:'100%'});
+		    } else {
+		        alert("Sorry, the Dashboard does not open in iPhones. Try in your desktop, please.");
+		    }
+		    });
+                $("#open-movies-list").on("click", function (e) {
+                    showMovie(function (movie) {
+                        console.log(movie);
+	            });
+                    //location.reload();
+                });
+                $("#open-clickbox").on("click", function (e) {
+                    $("#popup-clickbox").slideToggle("slow");
+                });
+                $("#do-logout").on("click", function (e) {
+                    //myAdFw.logout();
+                    // clear cookies
+                    document.cookie = 'auth_key=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+                    location.reload();
+                });
+            </script>
+        </div>
+    </div>
+
+</body>
+
+
+</html>
