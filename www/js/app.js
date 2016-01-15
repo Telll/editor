@@ -465,7 +465,12 @@ function onAppReady() {
   }
   startTelll(function(t) {
     console.info("Its telll:", t);
-
+    /*$("body").mousemove(function(){
+	handleMouse({x:event.pageX,y:event.pageY}, function(classe){
+	   console.log("Mouse in: "+ classe);
+	});
+        //console.log(event.pageX + ", " + event.pageY);
+    });*/
   });
 
 }
@@ -514,13 +519,14 @@ function startTelll(cb) {
     $("#clickbox").html("<iframe src='http://webapp.telll.me/demo/clickbox.html' border='0' width='100%' height='100%' style='border:none'></iframe>");
     $("#popup-clickbox").find("button.close").unbind("click");
     $("#popup-clickbox").find("button.close").on("click", function() {
-      $("#popup-clickbox").fadeOut("slow");
+      closeClickbox();
     });
     //open video player
+    console.log("Opening movie ...");
     showMovie(function( movie, player ) {
       console.log("Callback from showMovie ...");
-      console.log(myAdFw.movie);
-      console.log(movie);
+      //console.log(myAdFw.movie);
+      //console.log(movie);
       // global player vars    
       //myPlayer = player;
       //thePlayer = player;
@@ -544,51 +550,9 @@ function startTelll(cb) {
           return src;
      }
 */
-     // instance the tagplayer
-     console.log("The store for TagPlayer ...");  
-     console.log(myAdFw.store);
-     myAdFw.showTagPlayer( myAdFw.moviePlayerView, function(tp){
-       console.log("Tag Player callback ...");  
-       console.log(tp);
-/*
-       myAdFw.moviePlayerView.on("playing", function(){
-             console.log( "Show tagPalyer when playing ...");
-             console.log( myAdFw.tagPlayerView.state );
-             if (
-             myAdFw.tagPlayerView.state == 'init' || 
-             myAdFw.tagPlayerView.state == 'detach'  
-             ){ 
-                  console.log( "Show !!!");
-                  myAdFw.tagPlayerView.show();
-             }
-
-       });
-       myAdFw.moviePlayerView.on("stop", function(t){
-             console.log( "Detach TagPlayer when stoped ...");
-             myAdFw.tagPlayerView.detach();
-       });
-       myAdFw.moviePlayerView.on("timeupdate", function(t){
-             console.log( "Handle tag when time ...");
-             myAdFw.tagPlayerView.handleTag(t);
-       });
-
-       myAdFw.moviePlayerView.on('init', function(data) { console.log( "MockPlayer: "           + " init  " + data ); });
-       myAdFw.moviePlayerView.on('canplaytrough', function(data) { 
-           console.log( "MockPlayer: "  + " can play  " + data ); 
-  
-       });
-       myAdFw.moviePlayerView.on('loaded', function(data) { console.log( "MockPlayer: "         + " loaded  " + data ); });
-       myAdFw.moviePlayerView.on('playing', function(data) { console.log( "MockPlayer: "        + " playing  " + data ); });
-       myAdFw.moviePlayerView.on('timeupdate', function(data) { 
-         console.log( "MockPlayer: "     + " time  " + data ); 
-       });
-       myAdFw.moviePlayerView.on('stop', function(data) { console.log( "MockPlayer: "           + " stop  " + data ); });
-       myAdFw.moviePlayerView.on('paused', function(data) { console.log( "MockPlayer: "         + " paused  " + data ); });
-*/  
-     }); 
-     console.log("Atual player:", player);
-     console.log("ThePlayer:", thePlayer);
-     console.log("MOCK:", myAdFw.moviePlayerView);
+     //console.log("Atual player:", player);
+     //console.log("ThePlayer:", thePlayer);
+     //console.log("MOCK:", myAdFw.moviePlayerView);
     });
 
     if (cb) cb(myAdFw);
@@ -596,6 +560,7 @@ function startTelll(cb) {
   if (window.innerHeight < 350) $("div.notes").fadeOut("slow");
 }
 
+ 
 /** Create the movie screen:
  * Movies List
  * Player
@@ -603,16 +568,33 @@ function startTelll(cb) {
  * Photolinks List
  */
 function showMovie(cb) {
+  console.log("Begin showMovie ...");
   myAdFw.showMoviesList(function(m) {
     console.log("Movies list: running callback");
     //console.log("Movie selected: " + m.getTitle());
-    console.log(m);
+    //console.log(m);
     myAdFw.showMockPlayer(function(mp) {
       console.log("MockPlayer: running callback ...");
       myPlayer = mp;
       console.log(mp);
-      telllPopup($('#movie-player'), "Playing " + m.title);
 
+      //////////////////////////////////////////////////////////
+      // instance the tagplayer
+      console.log("The store for TagPlayer ...",myAdFw.store);  
+      myAdFw.showTagPlayer( myAdFw.moviePlayerView, function(tp){
+        console.log("Tag Player callback ...");  
+        //console.log(tp);
+        tp.on("tag", function(){
+            console.log("TagPlayer emited tag: ", tp.actualPhotolink);
+            // offset from higlited photolink and the actual
+            var offset = tp.actualPhotolink - highlightedPhotolink;
+            scrollPhotolinksPanel(offset);
+        })
+      }); /////////////////////////////////////////////////////
+
+      console.log("Showing movie app popup!");
+      moviePopupId = telllPopup($('#movie-player'), "Playing " + m.title);
+      console.log("Showing movie in popup id: " + moviePopupId);
       // create a sliding titlebar
       $(".popup-titlebar").wrapAll("<div class='tpp-slide'><div class='tpp-slide-panel'></div></div>");
       $("#movie-player").css({
@@ -628,21 +610,24 @@ function showMovie(cb) {
         top: '0px'
       });
       $(".tpp-slide-panel").stop().slideToggle();
-      $(".tpp-slide").on('mouseenter mouseleave', function(e) {
-        $(".tpp-slide-panel").stop().slideToggle();
+      $(".tpp-slide").on('mouseleave', function(e) {
+        $(".tpp-slide-panel").stop().slideUp();
+      });
+      $(".tpp-slide").on('mouseenter', function(e) {
+        $(".tpp-slide-panel").stop().slideDown();
       });
 
       ///////////////////////////////////////
-      /** the photolinks list
+      /** the photolinks list and panel
        ************************/
-      //console.log("Calling the PhotolinksList");
-      //console.log("The telll.movie: A", myAdFw.movie);
+      console.log("Call the PhotolinksList and create panel");
+      console.log("The telll.movie: TagP", myAdFw.movie);
       var list = myAdFw.showPhotolinksList();
       //setTimeout(function () {
-      //console.log(list);
+      console.log(list);
       //console.log("The telll.movie: B ", myAdFw.movie);
       list.once("open", function(pl) {
-        //console.log("The telll.movie: C ", myAdFw.movie);
+        console.log("The telll.movie: ", myAdFw.movie);
         //console.log("PL :", pl);
         //console.log("Arr :", pl.a);
         createPhotolinksPanel(pl);
@@ -654,12 +639,12 @@ function showMovie(cb) {
       //
       //////////////////////////////////////
       // player listeners
-
+      console.log("Running player listeners: ", prjkPlayer);
       if (prjkPlayer) {
+        console.log("call launchPrjkPlayer");
         launchPrjkPlayer( m, function (prjk){
-	  //console.log("PRJK callback ...");
-	  //console.log("The Player is now", thePlayer);
-          if (cb) cb(myAdFw.movie, thePlayer);
+	  console.log("PRJK callback ...");
+          if (cb) cb(myAdFw.movie, prjk);
 	});
       } else {
         adaptMockPlayer();
@@ -686,10 +671,14 @@ function showMovie(cb) {
   setTimeout(function() {
     formatMoviesList();
   }, 600);
+  console.log("Ending showMovie");
 }
-
+/**
+* @param movie {iData}
+* @param cb {function} its called after all setup tasks
+*/
 function launchPrjkPlayer(movie, cb) {
-//	console.log("Launching PRJK");
+	console.log("Launching PRJK");
   ///////////////////////////////////////
   /** the pk movie player
    *********************/
@@ -706,7 +695,7 @@ function launchPrjkPlayer(movie, cb) {
     enableFullscreen: false,
     useYTIframeAPI: true,
   }, function(player) {
-    //console.log("PPlayer running callback...");
+    console.log("PPlayer running callback...");
     thePlayer = player; 
     // reformat player
     reformatPkPlayer();
@@ -745,8 +734,27 @@ function launchPrjkPlayer(movie, cb) {
       console.log('Its Youtube');
       console.log(player);
     }
-    //player.setDebug(true);
-    myAdFw.moviePlayerView.emit("loaded", movie);
+    // read state and reformat logo
+    console.log("Calling tagPlayerView.handleState", myAdFw.tagPlayerView);
+    myAdFw.tagPlayerView.handleState(function(classe, i){
+       console.log("Returning callback from tagPlayerView.handleState");
+         setTimeout(function(){
+       if (! $(".logo-86x86").hasClass(classe[i])){
+           $.each(classe, function(tc){
+               $(".logo-86x86").removeClass(classe[tc])
+           }); 
+           $(".logo-86x86").removeAttr("style");
+           $(".logo-86x86").addClass(classe[i])
+       }
+         }, 600);
+    });
+   // Integrate PRJK controls with panel
+    //$('.ppcontrols').appendTo($("#telll-controls"));
+    //$('.ppcontrols').removeClass("active");
+    //$('.ppcontrols').addClass("inactive");
+     //player.setDebug(true);
+    //console.log("moviePlayer emit loaded!!");
+    //myAdFw.moviePlayerView.emit("loaded", movie);
     if (cb) cb(movie, player);
   });
   //////////////////////////////////////
@@ -756,55 +764,56 @@ function launchPrjkPlayer(movie, cb) {
     console.log("Toggle play/stop");//sync MockPlayer
 	  if (myPlayer.state == "playing") {
              myAdFw.moviePlayerView.stop();
-             //myAdFw.tagPlayerView.stop();
           }
           else {
              myAdFw.moviePlayerView.play();
-             //myAdFw.tagPlayerView.play();
           }
   };
   var mouseEnterListener = function() {
-    tagDefaultView();
-    //$('.ppcontrols').appendTo("#telll-controls").fadeIn();
-    //$('.ppcontrols').removeClass("inactive");
-    //$('.ppcontrols').addClass("active");
-    console.log("mouse over pk");
+    //tagDefaultView();
+
+    //console.log("mouse over pk");
   };
   // hide labels 5 seconds after mouse out
   var mouseLeaveListener = function() {
-    setTimeout(function() {
-      tagNoneView();
-    }, 5000);
+      //tagNoneView();
   };
   // state listener callback
   var stateListener = function(state) {
     //console.log(state);
     switch (state) {
       case 'PLAYING':
-	//myAdFw.moviePlayerView.emit("playing",myAdFw.movie);//sync MockPlayer
-	//myAdFw.moviePlayerView.state = "playing";//sync MockPlayer
-        break;
+         // hide tags
+         tagNoneView();
+         $('.ppcontrols').appendTo($(".ct-slide"));
+         //$('.ppcontrols').appendTo($("#telll-controls"));
+         //$('.ppcontrols').append($("#photolinks-list-widget"));
+      break;
       case 'PAUSED':
 	myAdFw.moviePlayerView.emit("pause",myAdFw.moviePlayerView.time);//sync MockPlayer
 	myAdFw.moviePlayerView.state = "pause";//sync MockPlayer
-        $('.tag').detach();
-        for (i = 0; i < animT.length; i++) {
+        //$('.tag').detach();
+/*
+	for (i = 0; i < animT.length; i++) {
           clearTimeout(animT[i]);
         }
         for (i = 0; i < trackms.length; i++) {
           trackms[i].stopped = 1;
         }
+	*/
         break;
       case 'STOPPED':
 	myAdFw.moviePlayerView.emit("stop",myAdFw.moviePlayerView.time);//sync MockPlayer
 	myAdFw.moviePlayerView.state = "stop";//sync MockPlayer
-        $('.tag').detach();
-        for (i = 0; i < animT.length; i++) {
+	highlightPhotolink (0);
+        //$('.tag').detach();
+/*        for (i = 0; i < animT.length; i++) {
           clearTimeout(animT[i]);
         }
         for (i = 0; i < trackms.length; i++) {
           trackms[i].stopped = 1;
         }
+	*/
         break;
       case 'COMPLETED':
 	myAdFw.moviePlayerView.emit("ended",myAdFw.moviePlayerView.time);//sync MockPlayer
@@ -812,6 +821,7 @@ function launchPrjkPlayer(movie, cb) {
         showClickbox();
         $("div.telll-popup").detach();
         $("div#photolinks-list-widget").detach();
+        $("div#telll-tag-player-widget").detach();
         $("div.popup-overlay").detach();
         break;
     }
@@ -820,6 +830,7 @@ function launchPrjkPlayer(movie, cb) {
   // time listener callback
   // triggered whenever playhead position changes (e.g. during playback)
   var timeListener = function(value) {
+    var moviePosition = value;
           //console.log('timelistener ..', myAdFw.tagPlayerView);	  
           //myAdFw.tagPlayerView.handleTag(value);
           //console.log('timelistener ..');	  
@@ -827,9 +838,13 @@ function launchPrjkPlayer(movie, cb) {
           myAdFw.moviePlayerView.time = value;
           //myAdFw.tagPlayerView.handleTag(value);
 	  // do PRJK stuff
-/*
-    $('#status').val(value);
-    moviePosition = value;
+    //$('#status').val(value);
+    actualPhotolink = myAdFw.tagPlayerView.actualPhotolink || actualPhotolink;
+    //console.log("scrollP", myAdFw.tagPlayerView);
+    //console.log("scrollP: "+actualPhotolink+" - "+highlightedPhotolink);
+    //scrollPhotolinksPanel(actualPhotolink - highlightedPhotolink);
+
+    /*
     // scan trackms to see if someone is now
     for (i = 0; i < trackms.length; i++) {
       p2 = trackms[i].points[0].t;
@@ -841,7 +856,7 @@ function launchPrjkPlayer(movie, cb) {
       }
       if (value >= p1 && value <= p2) { // It's playing now!
         if (trackms[i].stopped) {
-          trackms[i].stopped = 0;
+          //trackms[i].stopped = 0;
           actualPhotolink = trackms[i].photolink;
           //console.log('Photolink n: ');
           //console.log(trackms[i].photolink);
@@ -849,14 +864,14 @@ function launchPrjkPlayer(movie, cb) {
           //console.log(actualPhotolink);
           // scroll photolink panel to here
           scrollPhotolinksPanel(actualPhotolink - highlightedPhotolink);
-          playTrackm(i); // animate tag
-          flashBalls(); // the warn element
+          //playTrackm(i); // animate tag
+          //flashBalls(); // the warn element
         }
       } else {
-        trackms[i].stopped = 1;
+        //trackms[i].stopped = 1;
       }
     } 
-*/
+    */
   };
 
   /** Behavior for
@@ -870,37 +885,64 @@ function launchPrjkPlayer(movie, cb) {
   }, function(e){
       console.log('Single Click!!!');
       tagDefaultView();
+      telllDialog("Showing tag :)", 2000);
       //sendPhotolink(actualPhotolink);
   },400);
 
 
-
-
   /** projekktor toolbar change
-   * align logo
+   * Adapt the panel (photolinksListWidget)
    */
-  $('.ppcontrols').bind('cssClassChanged', function() {
-    if ($('.ppcontrols').hasClass('active')) {
-      //console.log('Controls active');
-      $(".logo-86x86").css({
-        "bottom": '120px',
-        "right": '20px'
-      });
-      $("#photolinks-list-widget").css({
-        "bottom": '40px'
-      });
-    } else {
-      //console.log('Controls out');
-      $(".logo-86x86").css({
-        "bottom": '2px',
-        "right": '2px'
-
-      });
-      $("#photolinks-list-widget").css({
-        "bottom": '0px'
-      });
-    }
+  $('.ppcontrols').on('cssClassChanged', function() {
+   console.log("ppcontrols changed ...");
+    //   setTimeOut(function(){
+    myAdFw.tagPlayerView.handleState(function(classe, i){
+       console.log("ppcontrols returned from handleState");
+       //if (! $(".logo-86x86").hasClass(classe[i])){
+           // remove any style from logo
+           $.each(classe, function(tc){
+               $(".logo-86x86").removeClass(classe[tc])
+           }); 
+           $(".logo-86x86").removeAttr("style");
+           $(".logo-86x86").addClass(classe[i]);
+           /*$(".logo-86x86").mouseover(function(){
+                $(".ct-slide-panel").show();
+                $("#photolinks-list-widget").removeClass("inactive");
+                $("#photolinks-list-widget").addClass("active");
+           });*/
+           $(".logo-86x86").on('mouseenter', function(){telllDialog("Click on logo!!!",2000)});
+           $(".logo-86x86").on('mousemove', function(e){
+                $(".ct-slide-panel").show();
+                $("#photolinks-list-widget").removeClass("inactive");
+                $("#photolinks-list-widget").addClass("active");
+            $('.logo-86x86').css({
+               left: e.pageX - 15,
+               top: e.pageY - 15
+               });
+           });
+           if ($('.ppcontrols').hasClass('inactive')) {
+             console.log('Controls inactive');
+             $("#telll-controls").css({
+               "height": '65px'
+             });
+           } else {
+             console.log('Controls active');
+             $("#telll-controls").css({
+               "height": '65px',
+               "bottom" : "38px"
+             });
+           }
+       //}
+    });
+    //   }, 200);
   });
+/*  $("div.ct-slide").on("mouseover", function(){
+    $('.ppcontrols').clearQueue();
+    $('.ppcontrols').removeClass("inactive");
+    $('.ppcontrols').addClass("active");
+  }); 
+*/
+  console.log("Ended PRJK");
 } // end launchPrjkPlayer
 
 /** Full window
@@ -993,15 +1035,16 @@ function setPanelWidth() {
 
   // set the number of icons to be displayed
   // this vat will be used by scrollPanel to
-  phListSize = parseInt($("#panel").width()/$(".frame-icon").width());
-
+  phListSize = parseInt($("#panel").width()/($(".frame-icon").width()+parseInt($('.frame-icon').css("margin-left"))))  ;
+  if ( phListSize > myPhotolinks.length) phListSize = myPhotolinks.length;
   //center the panel in frame
-  var iconWidth = $('.frame-icon').width();
+  var iconWidth = $('.frame-icon').width()+parseInt($('.frame-icon').css("margin-left"));
   var iconsWidth = 0;
   $('.frame-icon').each(function(index) {
 	      iconsWidth += parseInt($(this).width(), 10);
   });
-  var offset = ($("#panel").width() - iconWidth * phListSize);
+  var offset = ($("#panel").width() - iconWidth * phListSize)/2;
+  console.log("setPanelWidth: "+$("#panel").width()+" - "+ iconWidth+" * "+phListSize+" = "+offset);
   $("#panel").css({"margin-left":offset+"px", "width": ($("#panel").width()-offset)+"px"});
 }
 
@@ -1031,22 +1074,47 @@ function createPhotolinksPanel(a) {
   }
   // set panel width
   setPanelWidth();
-  // trigger the closing popup and close too
-  $("button.close").on("click", function() {
+  $("#photolinks-list-widget").css({
+    "bottom": '0px',
+    "left": '0px'
+  });
+  // trigger the closing popup from movie player and detach panel and tagplayer also
+  $("#"+moviePopupId+" button.close").on("click", function() {
     $("#photolinks-list-widget").detach();
+    $("div#telll-tag-player-widget").detach();
   });
   // create a sliding control
   $("#telll-controls").wrapAll("<div class='ct-slide'><div class='ct-slide-panel'></div></div>");
   $(".ct-slide").css({
-    height: '60px',
+    height: '160px',
     width: '100%',
     'z-index': 'inherit',
     position: 'absolute',
     bottom: '0px'
+  }).on("mouseover", function(){$(".ct-slide-panel").show()});
+   $("#telll-controls").css({
+     "height": '65px'
+   });
+
+  $("#photolinks-list-widget").removeClass("active");
+  $("#photolinks-list-widget").addClass("inactive");
+  $(".ct-slide-panel").slideUp("slow");
+  /*// close/open the panel
+  $(".ct-slide-panel").stop().slideToggle(20, function(){
+      $("#photolinks-list-widget").addClass("inactive");
+      $("#photolinks-list-widget").removeClass("active");
+  });*/
+  $(".ct-slide").on('mouseenter', function(e) {
+    $(".ct-slide-panel").slideDown(function(){
+        $("#photolinks-list-widget").addClass("active");
+        $("#photolinks-list-widget").removeClass("inactive");
+     });
   });
-  $(".ct-slide-panel").stop().slideToggle(2000);
-  $(".ct-slide").on('mouseenter mouseleave', function(e) {
-    $(".ct-slide-panel").stop().slideToggle("slow");
+  $(".ct-slide").on('mouseleave', function(e) {
+    $(".ct-slide-panel").slideUp(function(){
+        $("#photolinks-list-widget").addClass("inactive");
+        $("#photolinks-list-widget").removeClass("active");
+     });
   });
   // mouse over show labels
   $(".frame-icon *").on("mouseover", function(e) {
@@ -1159,16 +1227,17 @@ function createPhotolinksPanel(a) {
   console.log("Panel created!!!");
 }
 
+/*
 function highlightPhotolink(n) {
   pls = $("#panel").find('.frame-icon img');
-  console.log('---> ' + n);
-  console.log(pls.eq(n));
+  //console.log('---> ' + n);
+  //console.log(pls.eq(n));
   pls.each(function(i) {
     //console.log(pls.eq(i).attr('id_photolink'));
     //newSrc = pls.eq(i).find('img').attr('src').replace("_green.jpg", ".jpg");
     //pls.eq(i).find('img').attr('src', newSrc);
     if (parseInt(pls.eq(i).attr('id_photolink')) != n) {
-      pls.eq(i).css('opacity', '0.3');
+      pls.eq(i).css('opacity', '0.1');
     } else {
       pls.eq(n).css('opacity', '1');
       console.log('highlighting ' + n);
@@ -1179,14 +1248,14 @@ function highlightPhotolink(n) {
   //pls.eq(n).find('img').attr('src', newSrc);
   //pls.eq(n).css({'width':'96px','height':'52px'});
 }
-
+*/
 function scrollPhotolinksPanel(n) {
   //console.log("Scrolled by:");
   //console.log(n);
   highlightedPhotolink += n;
   //console.log("Highlighted Photolink:");
   //console.log(highlightedPhotolink);
-  pls = $("#panel").find('.frame-icon img');
+  var pls = $("#panel").find('.frame-icon img');
   //console.log(pls);
   // Catching some errors
   if (highlightedPhotolink > pls.length - 1) {
@@ -1195,13 +1264,14 @@ function scrollPhotolinksPanel(n) {
   if (highlightedPhotolink < 0) {
     highlightedPhotolink = 0;
   }
-
   highlightPhotolink(highlightedPhotolink);
 
   // Scroll panel to position
   // claculate offset
   var ml = 0;
+  //console.log("scroll pls:", pls);
   pls.each(function(i) {
+  //console.log("scroll pls", i);
     if (parseInt(pls.eq(i).attr('id_photolink')) < highlightedPhotolink - Math.round(phListSize / 2)
       //   && highlightedPhotolink < parseInt(pls.length) - Math.round(phListSize/2)
     ) {
@@ -1215,56 +1285,10 @@ function scrollPhotolinksPanel(n) {
     //pls.eq(0).insertAfter(pls.eq(pls.length-1));
     //pls.eq(0).css('margin-left',ml);
     //panelSliding = 0;
-    console.log('Panel scrolled by: ' + of);
+    //console.log('Panel scrolled by: ' + of);
   });
-
-  /*
-            if (highlightedPhotolink == 0){ highlightPhotolink(0); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == 1){ highlightPhotolink(1); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == 2){ highlightPhotolink(2); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == 3 && n === 1){ highlightPhotolink(3); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == pls.length-1){
-                    highlightPhotolink(6); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == pls.length-2 ){
-                    highlightPhotolink(5); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == pls.length-3){
-                    highlightPhotolink(4); panelSliding = 0;return 0; }
-            if (highlightedPhotolink == pls.length-4 && n === -1){
-                    highlightPhotolink(3); panelSliding = 0;return 0; }
-            ml = pls.css('margin-left');
-            mwidth = '-120px';
-            if (n === -1){
-	        pls.eq(pls.length-1).insertBefore(pls.eq(0));
-	        pls.eq(pls.length-1).css('margin-left',mwidth);
-                pls.eq(pls.length-1).animate({
-                            'margin-left': ml,
-                            'transparency' : 0
-                       }, 400, function(){
-                           //panelSliding = 0;
-                });
-	    } else if (n === 1){
-                pls.eq(0).animate({
-                        'margin-left': mwidth,
-                        'transparency' : 0
-                   }, 400, function(){
-	               pls.eq(0).insertAfter(pls.eq(pls.length-1));
-	               pls.eq(0).css('margin-left',ml);
-                       //panelSliding = 0;
-                });
-	    } else if (Math.abs(n) > 1) {
-                for (i=0; i<Math.abs(n) ; i++){
-                    setTimeout(function(){
-                        scrollPhotolinksPanel(n/Math.abs(n));
-                    },(i+1)*451);
-                }
-            }
-            // done
-           // restore photolinks
-           setTimeout(function(){
-               highlightPhotolink(3); panelSliding = 0;
-           },450);
-           */
 }
+
 /** Send photolink to clickbox
  * @param id
  */
@@ -1298,7 +1322,7 @@ function sendPhotolink(photolinkId) {
 }
 
 function highlightPhotolink(n) {
-  pls = $("#panel").find('.frame-icon img');
+  var pls = $("#panel").find('.frame-icon img');
   console.log('---> ' + n);
   console.log(pls.eq(n));
   pls.each(function(i) {
@@ -1306,10 +1330,12 @@ function highlightPhotolink(n) {
     //newSrc = pls.eq(i).find('img').attr('src').replace("_green.jpg", ".jpg");
     //pls.eq(i).find('img').attr('src', newSrc);
     if (parseInt(pls.eq(i).attr('id_photolink')) != n) {
-      pls.eq(i).css('opacity', '0.3');
+      pls.eq(i).css('opacity', '0.1');
     } else {
       pls.eq(n).css('opacity', '1');
       console.log('highlighting ' + n);
+      console.log("Olha");
+      //throw("Olha");
     }
   });
   // highlight actual photolink
@@ -1321,17 +1347,21 @@ function highlightPhotolink(n) {
 /** tagViews functions
  */
 function tagDefaultView() {
-	console.log("fade in the tag");
-$("#telll-tag-player-widget").fadeIn();
+	myAdFw.tagPlayerView.viewMode("default");
+//console.log("fade in the tag");
+//$("#telll-tag-player-widget").fadeIn();
 }
 
 function tagNoneView() {
-	console.log("fade out the tag");
-$("#telll-tag-player-widget").fadeOut();
+	myAdFw.tagPlayerView.viewMode("none");
+//console.log("fade out the tag");
+//$("#telll-tag-player-widget").fadeOut();
+}
+function closeClickbox() {
+      $("#popup-clickbox").fadeOut("slow");
 }
 
 function showClickbox() {
-  //console.log('Opening clickbox ...');
   $("#popup-clickbox").fadeIn().css("z-index",9999999);
 }
 function adaptMockPlayer() {
