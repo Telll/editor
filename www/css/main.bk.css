@@ -1,0 +1,463 @@
+html.overlay {
+    overflow: hidden;
+}
+fieldset{
+    border: none !important;
+}
+.popup {
+    position: fixed !important;
+    top: 0px!important;
+    left: 0px !important;
+    max-width: initial !important;
+    min-width: initial !important;
+    max-height: initial !important;
+    min-height: initial !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.telll-widget {
+    max-width: initial !important;
+    min-width: initial !important;
+    max-height: initial !important;
+    min-height: initial !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    background: black !important;
+}
+
+.dashboard-panel {
+    overflow: auto !important;
+    min-width: initial !important;
+    min-height: initial !important;
+}
+
+.welcome {
+    font-size: 18px !important;
+    text-align: center;
+    padding-top: 25px;
+}
+
+legend {
+    display: none;
+}
+
+div.telll-login-widget {
+    width: 290px !important;
+    min-width: 180px !important;
+}
+
+div#telll-login-frame form fieldset {
+    padding: 0 0 10px !important;
+    max-width: 1096px !important;
+    min-width: 180px !important;
+    min-height: 200px !important;
+    max-height: 1096px !important;
+    margin-top: 20px !important;
+    width: 210px !important;
+}
+
+div#telll-login-frame form {
+    min-width: 180px !important;
+    max-width: 290px !important;
+    width: 290px !important;
+}
+
+div.telll-login-field {
+    width: 210px !important;
+    padding: 0px !important;
+    margin: 0px;
+    margin-top: 10px !important;
+}
+
+div.telll-login-field input,
+div#telll-login-frame div.notes {
+    width: 210px !important;
+}
+
+div.telll-login-field.submit {
+    width: 210px !important;
+    padding: 0px !important;
+    margin: 0px;
+    margin-top: 32px !important;
+    text-align: center !important;
+}
+
+div.telll-login-field.submit input {
+    width: initial;
+}
+
+span.red {
+    color: #ff0000;
+}
+
+span.green {
+    color: #00FF00;
+}
+
+span.blue {
+    color: #0000FF;
+}
+
+.welcome {
+    font-size: 28px;
+}
+
+.telll-button {
+    width: 100% !important;
+    background: transparent !important;
+    color: white;
+    border: none !important;
+    /*font-weight: bold !important;*/
+    
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: lighter;
+    /* font-stretch: ; */
+    
+    font-family: "Arial";
+}
+
+.note {
+    font-size: 12px;
+}
+
+.telll-dialog {
+    /* z-index: 8000; */
+}
+
+.clickbox,
+div#clickbox {
+    min-width: initial !important;
+    max-width: initial !important;
+    min-height: initial !important;
+    max-height: initial !important;
+    padding: initial !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none
+}
+/*
+div.logo-86x86 {
+    position: fixed !important;
+    right: 2px !important;
+    bottom: 2px !important;
+    top: initial !important;
+    margin: 0px !important;
+    background-size: 25px !important;
+    width: 25px !important;
+    height: 25px !important;
+}
+*/
+
+#return-button {
+    background: url("../img/telll.png") no-repeat -282px -68px !important;
+    width: 28px !important;
+    height: 28px !important;
+}
+
+#forward-button {
+    background: url("../img/telll.png") no-repeat -318px -68px transparent !important;
+    width: 28px !important;
+    height: 28px !important;
+}
+
+#telll-controls {}
+
+button.close {
+    background: url("../img/telll.png") no-repeat -350px -70px transparent !important;
+    border: none;
+    width: 28px;
+    height: 28px;
+    color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+button.play {
+    background: url("../img/telll.png") no-repeat -384px -71px transparent !important;
+    border: none;
+    width: 28px;
+    height: 28px;
+    color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+button.pause {
+    background: url("../img/telll.png") no-repeat -420px -71px transparent !important;
+    border: none;
+    width: 28px;
+    height: 28px;
+    color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+button.stop {
+    background: url("../img/telll.png") no-repeat -457px -71px transparent !important;
+    border: none;
+    width: 28px;
+    height: 28px;
+    color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+#photolinks-list-widget {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 80000;
+    height: 60px;
+    width: 100%;
+    overflow: hidden;
+}
+
+form fieldset div.notes {
+    float: none !important;
+    padding: 5px !important;
+}
+
+form div.submit {
+    /* width: 214px; */
+    
+    padding: 0 !important;
+    margin-left: auto !important;
+}
+
+form div label {
+    text-align: left !important;
+}
+
+span.telll {
+    font-size: 58px !important;
+}
+
+div.telll-login-widget {
+    border-radius: 8px;
+    -webkit-box-shadow: 6px 6px 12px 1px rgba(50, 50, 50, 0.65);
+    -moz-box-shadow: 6px 6px 12px 1px rgba(50, 50, 50, 0.65);
+    box-shadow: 6px 6px 12px 1px rgba(50, 50, 50, 0.65);
+}
+
+div.telll-movies-list-widget {
+    border: 1px solid;
+    width: 100%;
+    height: 650px;
+    overflow: hidden;
+    margin: auto;
+    background: white;
+}
+
+div#telll-movies-list-frame {
+    width: 100% !important;
+    height: 100% !important;
+    background: black;
+}
+
+div.movie-label {
+    margin-top: 0px !important;
+    padding: 2px !important;
+}
+
+span.movie-title {
+    text-shadow: 1px 1px 2px rgba(180, 180, 180, 1);
+    font-size: 12px !important;
+}
+
+span.movie-description {
+    text-shadow: 1px 1px 2px rgba(180, 180, 180, 1);
+    font-size: 10px !important;
+}
+
+#telll-stage {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    background: black;
+}
+
+#telll-content {
+    /* position: absolute; */
+    
+    text-align: center;
+    margin: auto;
+    /* margin-top: 120px;
+    width: 290px;
+    height: 200px; */
+}
+
+div#menu {
+    text-align: center;
+}
+
+div#bottom-menu {
+    position: fixed;
+    width: 100%;
+    height: 36px;
+    left: 0px;
+    bottom: 0px;
+    background: black;
+    padding-top: 5px;
+}
+
+div#bottom-menu-frame {
+    margin: auto;
+    text-align: center;
+}
+
+span.menu-small {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+div.boom-home {
+    border-radius: 8px;
+    -webkit-box-shadow: 2px 2px 4px 1px rgba(255, 255, 255, 0.3);
+    -moz-box-shadow: 2px 2px 4px 1px rgba(255, 255, 255, 0.3);
+    box-shadow: 2px 2px 4px 1px rgba(255, 255, 255, 0.3);
+    height: 60px;
+    width: 150px;
+    overflow: hidden;
+    padding: 5px;
+    margin: auto;
+    margin-bottom: 7px;
+    /* background: white; */
+}
+
+#tell-dashboard-titlebar {
+    display: none;
+}
+
+div#telll-dashboard-frame {
+    width: 100%;
+}
+
+small {
+    display: none;
+}
+/* 800x600 screen */
+
+@media (min-device-width: 768px) and (max-device-width: 1024px) {}
+/* desktops */
+
+@media screen and (min-width: 1024px) {}
+/* mobiles */
+
+@media screen and (max-device-width: 640px) {}
+/* Smartphones (portrait and landscape) ----------- */
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+    /* STYLES GO HERE */
+}
+/* Smartphones (landscape) ----------- */
+
+@media only screen and (min-width: 321px) {
+    /* STYLES GO HERE */
+}
+/* Smartphones (portrait) ----------- */
+
+@media only screen and (max-width: 320px) {
+    div.telll-login-widget {
+        width: 290px;
+    }
+    form fieldset div.notes {
+        display: none;
+    }
+}
+/* iPads (portrait and landscape) ----------- */
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    /* STYLES GO HERE */
+}
+/* iPads (landscape) ----------- */
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    /* STYLES GO HERE */
+}
+/* iPads (portrait) ----------- */
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    /* STYLES GO HERE */
+}
+/* Desktops and laptops ----------- */
+
+@media only screen and (min-width: 1224px) {
+    /* STYLES GO HERE */
+}
+/* Large screens ----------- */
+
+@media only screen and (min-width: 1824px) {
+    /* STYLES GO HERE */
+}
+
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (orientation: landscape) {
+    /*    //iPhone 6+ landscape*/
+    
+    form fieldset div.notes {
+        display: none;
+    }
+}
+
+@media only screen and (max-device-width: 640px),
+only screen and (max-device-width: 667px),
+only screen and (max-width: 480px) {
+    /*    //iPhone 6 and iPhone 6+ portrait and landscape*/
+}
+
+@media only screen and (max-device-width: 640px),
+only screen and (max-device-width: 667px),
+only screen and (max-width: 480px) and (orientation: portrait) {
+    /*    //iPhone 6 and iPhone 6+ portrait*/
+}
+
+@media only screen and (max-device-width: 640px),
+only screen and (max-device-width: 667px),
+only screen and (max-width: 480px) and (orientation: landscape) {
+    /*    //iPhone 6 and iPhone 6+ landscape*/
+}
+/* iPhone 5 (portrait &amp; landscape)----------- */
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    /* STYLES GO HERE */
+}
+/* iPhone 5 (landscape)----------- */
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (orientation: landscape) {
+    form fieldset div.notes {
+        display: none;
+    }
+    div.telll-login-widget {
+        height: 275px;
+        width: 375px;
+    }
+}
+/* iPhone 5 (portrait)----------- */
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (orientation: portrait) {
+    div.telll-login-widget {
+        width: 290px;
+    }
+    /* STYLES GO HERE */
+}
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: portrait) {
+    /*    //iPhone 6 Portrait*/
+    
+    div.telll-login-widget {
+        width: 290px;
+    }
+}
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: landscape) {
+    /*    //iPhone 6 landscape*/
+}
+
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (orientation: portrait) {
+    /*    //iPhone 6+ Portrait*/
+    
+    div.telll-login-widget {
+        width: 330px;
+    }
+}

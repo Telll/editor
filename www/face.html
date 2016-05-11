@@ -1,0 +1,141 @@
+<html>
+<head>
+<!--  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+-->
+  <script src="js/telllSDK.js"></script>
+  <link rel="stylesheet" href="css/main.css" />
+  <title>jQuery Face</title>
+  <script>
+  $(document).ready(function() {
+    telllDialog('Welcome!  Fetching your information.... ', 5000);
+  $.ajaxSetup({ cache: true });
+  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+    FB.init({
+      appId: '1637665973161167',
+      xfbml: true,
+      cookie: true,
+      version: 'v2.5'
+    });     
+    //$('#loginbutton,#feedbutton').removeAttr('disabled');
+    //FB.getLoginStatus(updateStatusCallback);
+  // Now that we've initialized the JavaScript SDK, we call 
+  // FB.getLoginStatus().  This function gets the state of the
+  // person visiting this page and can return one of three states to
+  // the callback you provide.  They can be:
+  //
+  // 1. Logged into your app ('connected')
+  // 2. Logged into Facebook, but not your app ('not_authorized')
+  // 3. Not logged into Facebook and can't tell if they are logged into
+  //    your app or not.
+  //
+  // These three cases are handled in the callback function.
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  // Special share feed
+  var photolinkId = 4386;
+  var photolinkImg = "http://webapp.telll.me/img/photolinks/photolinks_ocean_13.01.jpg";
+  $("#face-share").on ("click", function(){
+  FB.ui({
+  method: 'feed',
+  picture: photolinkImg,
+  link: 'http://webapp.telll.me/cgi-bin/photolink.pl?id='+photolinkId,
+  caption: 'Photolink test from telll',
+  }, function(response){
+      if (response) telllDialog("Thanks to share on Facebook!",3000);
+      console.log(response);
+  });
+  });
+
+  });
+  });
+  // This is called with the results from from FB.getLoginStatus().
+  function statusChangeCallback(response) {
+    telllDialog('statusChangeCallback: ', 3000);
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // The person is logged into Facebook, but not your app.
+      telllDialog( 'Please log into this app.', 3000);
+    } else {
+      // The person is not logged into Facebook, so we're not sure if
+      // they are logged into this app or not.
+      telllDialog('Please log into Facebook.', 3000);
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    telllDialog('Welcome!  Fetching your information.... ', 3000);
+    FB.api('/me', function(response) {
+      telllDialog('Successful login for: ' + response.name, 3000);
+      telllDialog ('Thanks for logging in, ' + response.name + '!', 3000);
+    });
+
+/* Read feed from telll page */
+FB.api(
+    "/807560519390772/feed",
+    function (response) {
+      if (response && !response.error) {
+        /* handle the result */
+          console.log("Page feed", response);
+      }
+    }
+);
+
+
+
+
+  }
+
+
+
+
+  </script>
+</head>
+<body>
+<p style="color:black">Face test</p>
+<!-- like button -->
+<hr>
+<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>
+<hr>
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
+
+<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+</fb:login-button>
+
+<hr>
+
+<button id="face-share">Share on Face Timeline</button>
+
+</body>
+</html>
